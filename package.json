@@ -1,0 +1,13 @@
+{
+  "name": "emberbound-game909",
+  "version": "0.4.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test *.test.mjs",
+    "test:ui": "node --test v04.test.mjs"
+  },
+  "devDependencies": {
+    "happy-dom": "20.8.4"
+  }
+}

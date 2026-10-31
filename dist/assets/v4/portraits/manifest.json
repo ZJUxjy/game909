@@ -1,0 +1,68 @@
+{
+  "juggernaut": {
+    "src": "assets/v4/portraits/juggernaut.webp",
+    "width": 256,
+    "height": 256,
+    "bytes": 14400
+  },
+  "shadowfiend": {
+    "src": "assets/v4/portraits/shadowfiend.webp",
+    "width": 256,
+    "height": 256,
+    "bytes": 13904
+  },
+  "muerta": {
+    "src": "assets/v4/portraits/muerta.webp",
+    "width": 256,
+    "height": 256,
+    "bytes": 16042
+  },
+  "ursa": {
+    "src": "assets/v4/portraits/ursa.webp",
+    "width": 256,
+    "height": 256,
+    "bytes": 15162
+  },
+  "abaddon": {
+    "src": "assets/v4/portraits/abaddon.webp",
+    "width": 256,
+    "height": 256,
+    "bytes": 14400
+  },
+  "centaur": {
+    "src": "assets/v4/portraits/centaur.webp",
+    "width": 256,
+    "height": 256,
+    "bytes": 17610
+  },
+  "assassin": {
+    "src": "assets/v4/portraits/assassin.webp",
+    "width": 256,
+    "height": 256,
+    "bytes": 13554
+  },
+  "oracle": {
+    "src": "assets/v4/portraits/oracle.webp",
+    "width": 256,
+    "height": 256,
+    "bytes": 15310
+  },
+  "underlord": {
+    "src": "assets/v4/portraits/underlord.webp",
+    "width": 256,
+    "height": 256,
+    "bytes": 17410
+  },
+  "magnus": {
+    "src": "assets/v4/portraits/magnus.webp",
+    "width": 256,
+    "height": 256,
+    "bytes": 17738
+  },
+  "lina": {
+    "src": "assets/v4/portraits/lina.webp",
+    "width": 256,
+    "height": 256,
+    "bytes": 16690
+  }
+}
