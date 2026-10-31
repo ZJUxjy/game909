@@ -1,0 +1,10 @@
+import assert from 'node:assert/strict';
+import {readFileSync,existsSync} from 'node:fs';
+import {resolve,dirname} from 'node:path';
+import {createGame,startBattle,tickBattle,serialize,deserialize} from './dist/engine.js';
+const root=resolve('dist'),app=readFileSync('dist/app.js','utf8'),view=readFileSync('dist/renderer.js','utf8');
+const visited=new Set();function imports(file){if(visited.has(file))return;visited.add(file);const text=readFileSync(file,'utf8');for(const match of text.matchAll(/(?:from\s*|import\s*\()(['"])(\.\.?\/[^'"]+)\1/g)){const path=resolve(dirname(file),match[2]);assert(path.startsWith(root));assert(existsSync(path),`missing local module ${path}`);imports(path)}}imports(resolve('dist/app.js'));
+assert(visited.size>=5);assert(!view.includes('tickBattle('));assert(!view.includes('settleBattle('));assert(app.includes("import('./renderer.js').then"));assert(app.includes(".catch(error=>"));assert(view.includes('webglcontextlost'));assert(view.includes('pointercancel'));assert(view.includes('Math.hypot(dx,dy)>5'));assert(view.includes('if(!paused)now+='));
+console.log('PASS local module graph, asynchronous fallback, render-only authority, camera click guard and pause contract');
+const g=createGame(20261031),saved=serialize(g),b=startBattle(g);let last=0,count=0,death=0,heal=0,skills=0;for(let i=0;i<3000&&b.status==='running';i++){tickBattle(b,.1);for(const e of b.events.filter(e=>e.id>last)){assert(e.id>last);last=e.id;count++;assert(b.units.some(u=>u.uid===e.source)||e.source==null);assert(b.units.some(u=>u.uid===e.target)||e.target==null);assert(Number.isFinite(e.time));death+=e.type==='death';heal+=e.type==='heal';skills+=e.type==='skill'}}assert(count>20);assert(death>0);assert(heal>0);assert(skills>0);assert.equal(serialize(deserialize(saved)),saved);console.log(`PASS renderer event contract: ${count} ordered actual events, ${death} deaths, ${heal} heals, ${skills} skills; legacy save roundtrip`);
+console.log('Browser visual/context-loss testing remains required before release.');

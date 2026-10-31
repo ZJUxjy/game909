@@ -1,6 +1,6 @@
 # 余烬远征 / Emberbound
 
-基于《游戏设计.md》的中文五人自动对战爬塔可玩原型。静态网页，无第三方运行依赖。
+基于《游戏设计.md》的中文五人自动对战爬塔可玩原型。v0.2.0：本地打包 Three.js 的真正 3D 战场。纯静态网页，部署无需 npm 安装或构建，不依赖运行时 CDN。
 
 ## 运行
 
@@ -29,7 +29,10 @@
 ## 架构
 
 - `dist/engine.js`：无 DOM 依赖的纯战斗与成长逻辑。带种子伪随机、0.1 秒固定步长、规则目标解析、战利品防重复结算与存档结构校验。
-- `dist/app.js`：输入映射、浏览器持久化、Canvas 战场呈现、DOM 面板及动画。引擎状态是唯一战斗权威。
+- `dist/app.js`：输入映射、浏览器持久化、视图切换、2D 降级战场呈现、DOM 面板及动画。引擎状态是唯一战斗权威。
+- `dist/renderer.js`：只读 Three.js 显示适配器，原始低多边形角色、竞技场、镜头、射线点选、事件特效；不推进战斗或结算奖励。
+- `dist/vendor/three/`：固定 Three.js 0.180.0（MIT），两个本地 ES 模块与原许可证。
+- `dist/renderer.css` / `dist/ui-v2.css`：3D 血条、战斗文字与新版游戏 UI。
 - `dist/style.css`：响应式暗色奇幻界面与 reduced-motion 处理。
 - `dist/index.html`：静态入口。
 - `engine.test.mjs`：引擎自动测试。
@@ -41,6 +44,9 @@
 ```sh
 node --check dist/app.js
 node --check dist/engine.js
+node --check dist/renderer.js
+node integration.test.mjs
+node renderer.test.mjs
 node engine.test.mjs
 ```
 
@@ -51,3 +57,18 @@ node engine.test.mjs
 ## Vercel 部署
 
 从 Vercel 导入本仓库，保持 Root Directory 为仓库根目录。仓库中的 `vercel.json` 已设置静态输出为 `dist`，无需构建和安装依赖。若手动配置，Framework Preset 选择 Other，Build Command 留空，Output Directory 填 `dist`。
+
+## 3D 操作与兼容
+
+- 拖动战场旋转镜头，滚轮缩放；「重置镜头」回到默认战术视角。短点击才选择单位，拖拽不会意外改写集火战术。
+- 「3D 实景 / 2D 战术」可在同一场战斗内切换。高画质开启阴影；省电模式关闭阴影并限制像素比。
+- 3D 要求 WebGL2；加载失败或上下文丢失自动回退 2D，仍用同一引擎和同一存档。上下文恢复后可手动切回 3D。
+- 技能特效显示施法者光环，治疗/伤害根据实际引擎目标显示；不把技能描述误当作额外命中。视觉动作无独立随机战斗或延迟伤害判定。
+- 暂停冻结动作/特效，镜头仍可操作。此版本保留 `emberbound-v1` 存档键与版本 1 的存档格式，既有成长不迁移、不清空。
+- 美术为代码生成的原创低多边形造型，不包含商业游戏模型、贴图或音效。当前没有空间寻路/物理碰撞：前后排阵位由已有战术引擎控制。
+
+### 浏览器发布验收
+
+开局、点选敌人、拖动不误集火、暂停/倍速、结算一次、第二场重置；3D/2D 来回切换；镜头重置与窗口缩放；英雄/工坊/阵容面板与存档重载；移动端布局；禁用 WebGL/上下文丢失时继续 2D。此清单需实际浏览器验证，不能用 Node 测试替代画面验收。
+
+`renderer.test.mjs` 用真实 Three.js 场景/相机数学与非 GPU 后端覆盖角色、事件、暂停、镜头、上下文恢复和资源清理；不声称验证 GPU 像素、材质或性能。
